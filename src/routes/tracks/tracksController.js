@@ -3,15 +3,11 @@ const db = connexion.promise();
 
 const getOne = async (req, res) => {
   try {
-    const result = await db.query('SELECT * FROM track WHERE id = ?', [
+    const [oneTrack] = await db.query('SELECT * FROM track WHERE id = ?', [
       req.params.id,
     ]);
 
-    if (result[0].length === 0) {
-      res.status(404).json({ error: 'Record not found' });
-    } else {
-      res.status(200).json(result[0][0]);
-    }
+    res.status(200).json(oneTrack[0]);
   } catch (error) {
     console.error(error);
     res.sendStatus(500);
@@ -29,8 +25,20 @@ const getAll = async (req, res) => {
   }
 };
 
-const postTracks = (req, res) => {
-  res.status(200).send('Post route is OK');
+const postTracks = async (req, res) => {
+  try {
+    const track = req.body;
+
+    const [CreateTrack] = await db.query(
+      'INSERT INTO track (title, youtube_url, id_album) VALUES (?, ?, ?)',
+      [track.title, track.youtube_url, track.id_album]
+    );
+
+    res.status(201).json({ ...track, id: CreateTrack.insertId });
+  } catch (error) {
+    console.error(error);
+    res.sendStatus(500);
+  }
 };
 
 const updateTracks = (req, res) => {
