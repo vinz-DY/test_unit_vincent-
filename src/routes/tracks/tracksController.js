@@ -3,15 +3,12 @@ const db = connexion.promise();
 
 const getOne = async (req, res) => {
   try {
-    const result = await db.query('SELECT * FROM track WHERE id = ?', [
+    const [oneTrack] = await db.query('SELECT * FROM track WHERE id = ?', [
       req.params.id,
     ]);
 
-    if (result[0].length === 0) {
-      res.status(404).json({ error: 'Record not found' });
-    } else {
-      res.status(200).json(result[0][0]);
-    }
+      res.status(200).json(oneTrack[0]);
+
   } catch (error) {
     console.error(error);
     res.sendStatus(500);
@@ -29,7 +26,7 @@ const getAll = async (req, res) => {
   }
 };
 
-const postTracks = (req, res) => {
+const postTracks = async (req, res) => {
   res.status(200).send('Post route is OK');
 };
 
