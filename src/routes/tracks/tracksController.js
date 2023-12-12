@@ -7,8 +7,7 @@ const getOne = async (req, res) => {
       req.params.id,
     ]);
 
-      res.status(200).json(oneTrack[0]);
-
+    res.status(200).json(oneTrack[0]);
   } catch (error) {
     console.error(error);
     res.sendStatus(500);
@@ -27,7 +26,19 @@ const getAll = async (req, res) => {
 };
 
 const postTracks = async (req, res) => {
-  res.status(200).send('Post route is OK');
+  try {
+    const track = req.body;
+
+    const [CreateTrack] = await db.query(
+      'INSERT INTO track (title, youtube_url, id_album) VALUES (?, ?, ?)',
+      [track.title, track.youtube_url, track.id_album]
+    );
+
+    res.status(201).json({ ...track, id: CreateTrack.insertId });
+  } catch (error) {
+    console.error(error);
+    res.sendStatus(500);
+  }
 };
 
 const updateTracks = (req, res) => {
