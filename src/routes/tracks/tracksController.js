@@ -5,8 +5,15 @@ const getOne = (req, res) => {
   res.status(200).send('Get One route is OK');
 };
 
-const getAll = (req, res) => {
-  res.status(200).send('Get All route is OK');
+const getAll = async (req, res) => {
+  try {
+    const tracks = await db.query('SELECT * FROM track');
+    console.log(tracks);
+    res.status(200).json(tracks[0]);
+  } catch (error) {
+    console.error(error);
+    res.SendStatus(500);
+  }
 };
 
 const postTracks = (req, res) => {
