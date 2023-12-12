@@ -22,7 +22,7 @@ describe('🎧 TRACKS ROUTES', () => {
 
   it('should get the track with id 1 🧪 /api/tracks/1', async () => {
     const res = await supertest(app)
-      .get('/api/tracks/1')
+      .get(`/api/tracks/1`)
       .expect(200)
       .expect('Content-Type', /json/);
 

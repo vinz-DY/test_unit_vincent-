@@ -1,8 +1,21 @@
 const connexion = require('../../../db-config');
 const db = connexion.promise();
 
-const getOne = (req, res) => {
-  res.status(200).send('Get One route is OK');
+const getOne = async (req, res) => {
+  try {
+    const result = await db.query('SELECT * FROM track WHERE id = ?', [
+      req.params.id,
+    ]);
+
+    if (result[0].length === 0) {
+      res.status(404).json({ error: 'Record not found' });
+    } else {
+      res.status(200).json(result[0][0]);
+    }
+  } catch (error) {
+    console.error(error);
+    res.sendStatus(500);
+  }
 };
 
 const getAll = async (req, res) => {
